@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Playlist 💖</title>
+
+
+<style>
+body{
+  margin:0;
+  font-family:"Comic Sans MS", cursive;
+  background:
+    radial-gradient(circle at top left, #ffd1dc, transparent 60%),
+    radial-gradient(circle at bottom right, #ffb3c6, transparent 60%),
+    linear-gradient(135deg, #fff0f5, #ffe4ec);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+  padding:20px;
+}
+
+
+/* Card */
+.container{
+  background:#fffdf8;
+  padding:30px;
+  border-radius:28px;
+  width:100%;
+  max-width:520px;
+  text-align:center;
+  box-shadow:0 15px 30px rgba(255,105,180,.25);
+}
+
+
+h2{
+  color:#b45309;
+  margin-bottom:20px;
+}
+
+
+/* Song block */
+.song{
+  background:#ffe4ec;
+  padding:14px;
+  border-radius:18px;
+  margin:14px 0;
+  transition:.3s;
+}
+
+
+.song.playing{
+  box-shadow:0 0 18px rgba(244,114,182,.9);
+  transform:scale(1.02);
+}
+
+
+/* Header */
+.song-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+
+/* Song name */
+.song-name{
+  font-size:16px;
+  color:#9d174d;
+  font-weight:bold;
+}
+
+
+/* Play button */
+.play-btn{
+  background:#f472b6;
+  border:none;
+  padding:6px 14px;
+  border-radius:20px;
+  color:white;
+  cursor:pointer;
+}
+
+
+/* Progress bar */
+.progress{
+  margin-top:10px;
+  height:6px;
+  background:#fbcfe8;
+  border-radius:10px;
+  overflow:hidden;
+  cursor:pointer;
+}
+
+
+.progress-bar{
+  height:100%;
+  width:0%;
+  background:#f472b6;
+}
+
+
+/* Volume */
+.volume-box{
+  margin-top:25px;
+}
+
+
+.volume-box input{
+  width:100%;
+}
+
+
+/* Hearts */
+.heart{
+  position:fixed;
+  bottom:-20px;
+  font-size:18px;
+  animation:floatUp 3s linear forwards;
+  pointer-events:none;
+}
+
+
+@keyframes floatUp{
+  to{
+    transform:translateY(-100vh);
+    opacity:0;
+  }
+}
+
+
+.footer{
+  margin-top:20px;
+  color:#c08497;
+  font-size:14px;
+}
+</style>
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+<h2>Your Special Playlist 🎶</h2>
+
+
+<!-- SONG 1 -->
+<div class="song" data-song="haduve">
+  <div class="song-header">
+    <span class="song-name">Haduve</span>
+    <button class="play-btn" onclick="toggleSong('haduve')">▶</button>
+  </div>
+  <div class="progress" onclick="seek(event,'haduve')">
+    <div class="progress-bar" id="progress-haduve"></div>
+  </div>
+</div>
+
+
+<!-- SONG 2 -->
+<div class="song" data-song="shararath">
+  <div class="song-header">
+    <span class="song-name">Shararath</span>
+    <button class="play-btn" onclick="toggleSong('shararath')">▶</button>
+  </div>
+  <div class="progress" onclick="seek(event,'shararath')">
+    <div class="progress-bar" id="progress-shararath"></div>
+  </div>
+</div>
+
+
+<!-- SONG 3 -->
+<div class="song" data-song="ede">
+  <div class="song-header">
+    <span class="song-name">Ede Swarga</span>
+    <button class="play-btn" onclick="toggleSong('ede')">▶</button>
+  </div>
+  <div class="progress" onclick="seek(event,'ede')">
+    <div class="progress-bar" id="progress-ede"></div>
+  </div>
+</div>
+
+
+<div class="volume-box">
+  🔊 Volume
+  <input type="range" min="0" max="1" step="0.01" value="0.8"
+         oninput="setVolume(this.value)">
+</div>
+
+
+<div class="footer">Made for you 💖</div>
+
+
+</div>
+
+<!-- Detect refresh and redirect to first page -->
+<script>
+  if (window.performance && window.performance.getEntriesByType) {
+    const navEntries = window.performance.getEntriesByType("navigation");
+    if (navEntries.length && navEntries[0].type === "reload") {
+      window.location.href = "for_my_jobless_idiot_but_lovely_bestie.html";
+    }
+  }
+</script>
+
+<!-- AUDIO -->
+<audio id="song-haduve" src="haduve.mp3"></audio>
+<audio id="song-shararath" src="shararath.mp3"></audio>
+<audio id="song-ede" src="ede_swarga.mp3"></audio>
+
+
+<script>
+
+
+const songs={
+  haduve:document.getElementById("song-haduve"),
+  shararath:document.getElementById("song-shararath"),
+  ede:document.getElementById("song-ede")
+};
+
+
+let current=null;
+let heartTimer=null;
+
+
+/* Hearts */
+function spawnHeart(){
+  const h=document.createElement("div");
+  h.className="heart";
+  h.innerText="💖";
+  h.style.left=Math.random()*100+"vw";
+  document.body.appendChild(h);
+  setTimeout(()=>h.remove(),3000);
+}
+
+
+function startHearts(){
+  if(!heartTimer) heartTimer=setInterval(spawnHeart,700);
+}
+
+
+function stopHearts(){
+  clearInterval(heartTimer);
+  heartTimer=null;
+}
+
+
+/* Toggle Song */
+function toggleSong(name){
+
+
+  const song=songs[name];
+  const rows=document.querySelectorAll(".song");
+
+
+  /* 🔥 Force user interaction unlock */
+  song.muted=false;
+
+
+  Object.values(songs).forEach(s=>{
+    if(s!==song){
+      s.pause();
+      s.currentTime=0;
+    }
+  });
+
+
+  rows.forEach(r=>r.classList.remove("playing"));
+
+
+  if(current===song && !song.paused){
+    song.pause();
+    stopHearts();
+    current=null;
+    return;
+  }
+
+
+  song.volume=0;
+
+
+  song.play().catch(()=>{
+    alert("Tap play button again ❤️");
+  });
+
+
+  document
+    .querySelector(`.song[data-song="${name}"]`)
+    .classList.add("playing");
+
+
+  /* Fade in */
+  let v=0;
+  const fade=setInterval(()=>{
+    v+=0.05;
+    song.volume=Math.min(v,1);
+    if(v>=1) clearInterval(fade);
+  },120);
+
+
+  startHearts();
+  current=song;
+}
+
+
+/* Progress (SAFE) */
+Object.entries(songs).forEach(([name,song])=>{
+  song.addEventListener("timeupdate",()=>{
+
+
+    if(!song.duration) return; // prevents NaN bug
+
+
+    const bar=document.getElementById("progress-"+name);
+    bar.style.width=(song.currentTime/song.duration)*100+"%";
+  });
+});
+
+
+/* Seek */
+function seek(e,name){
+
+
+  const song=songs[name];
+
+
+  if(!song.duration) return;
+
+
+  const rect=e.currentTarget.getBoundingClientRect();
+  const percent=(e.clientX-rect.left)/rect.width;
+
+
+  song.currentTime=percent*song.duration;
+}
+
+
+/* Volume */
+function setVolume(v){
+  if(current) current.volume=v;
+}
+
+
+</script>
+
+
+</body>
+</html>

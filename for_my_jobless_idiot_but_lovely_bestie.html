@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hey Bestie ❤️</title>
+
+<style>
+body{
+  margin:0;
+  font-family:"Comic Sans MS", cursive;
+  background:
+    radial-gradient(circle at top left, #ffd1dc, transparent 60%),
+    radial-gradient(circle at bottom right, #ffb3c6, transparent 60%),
+    linear-gradient(135deg, #fff0f5, #ffe4ec);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+  padding:20px;
+}
+
+/* Card */
+.container{
+  background:#fffdf8;
+  padding:30px;
+  border-radius:28px;
+  text-align:center;
+  width:100%;
+  max-width:520px;
+  box-shadow:0 15px 30px rgba(255,105,180,.25);
+}
+
+/* Heartbeat */
+.container.heartbeat{
+  animation:heartbeat .6s ease;
+}
+@keyframes heartbeat{
+  0%{transform:scale(1)}
+  30%{transform:scale(1.08)}
+  60%{transform:scale(1)}
+  100%{transform:scale(1)}
+}
+
+img{width:240px;margin-bottom:18px;}
+
+.message{
+  max-width:420px;
+  margin:0 auto 20px;
+  color:#b45309;
+  font-size:18px;
+  line-height:1.55;
+}
+
+/* Buttons */
+.buttons{
+  position:relative;
+  height:130px;
+  max-width:360px;
+  margin:0 auto;
+}
+
+button{
+  padding:10px 26px;
+  font-size:16px;
+  border-radius:25px;
+  border:none;
+  cursor:pointer;
+  position:absolute;
+}
+
+/* YES pulse */
+#yesBtn{
+  background:#f472b6;
+  color:white;
+  left:50%;
+  bottom:0;
+  transform:translateX(-50%);
+  animation:pulse 1.6s infinite;
+}
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(244,114,182,.6)}
+  70%{box-shadow:0 0 0 15px rgba(244,114,182,0)}
+  100%{box-shadow:0 0 0 0 rgba(244,114,182,0)}
+}
+
+/* NO flee */
+#noBtn{
+  background:#e7d3b1;
+  top:0;
+  left:0;
+  transition:transform .2s ease;
+}
+#noBtn.shrink{transform:scale(.75);}
+
+/* Mute button */
+#muteBtn{
+  position:fixed;
+  top:15px;
+  right:15px;
+  background:rgba(0,0,0,.6);
+  color:white;
+  border:none;
+  padding:8px 14px;
+  border-radius:20px;
+  cursor:pointer;
+  display:none;
+  z-index:999;
+}
+
+/* Celebration */
+.celebrate{
+  position:fixed;
+  top:-20px;
+  animation:fall 3s linear forwards;
+  pointer-events:none;
+}
+@keyframes fall{
+  to{
+    transform:translateY(110vh) rotate(360deg);
+    opacity:0;
+  }
+}
+
+/* Toast */
+.toast{
+  position:fixed;
+  top:40px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#f472b6;
+  color:white;
+  padding:14px 24px;
+  border-radius:30px;
+  font-size:16px;
+  z-index:9999;
+}
+
+/* Music Modal */
+#musicModal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.6);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:10000;
+}
+
+.modalBox{
+  background:white;
+  padding:25px;
+  border-radius:22px;
+  text-align:center;
+  width:80%;
+  max-width:300px;
+}
+
+.modalBox button{
+  position:static;
+  margin:0 10px;
+}
+</style>
+</head>
+
+<body>
+
+<audio id="bgMusic" src="lala.mp3" loop></audio>
+
+<div id="musicModal">
+  <div class="modalBox">
+    <h3>Play music for more vibe? 🎵</h3>
+    <button id="musicYes">Yes 💖</button>
+    <button id="musicNo">No 🙂</button>
+  </div>
+</div>
+
+<button id="muteBtn">🔊</button>
+
+<div class="container" id="card">
+
+<!-- PAGE 1 -->
+<div id="page1">
+  <img src="teddy.gif">
+  <div class="message">
+    <p><strong>Hieeeeeee Trisha !</strong></p>
+    <p>since valentines day is nearing yk, and ur single and obviously im single…</p>
+    <p>(ik what ur thinking exactly atp, adre adala Kamangi 😎)</p>
+    <p>YES for Valentine or NO for being my bestie !!!</p>
+  </div>
+  <div class="buttons">
+    <button id="yesBtn">Yes 💖</button>
+    <button id="noBtn">No 😶</button>
+  </div>
+</div>
+
+<!-- PAGE 2 -->
+<div id="page2" style="display:none;">
+  <img src="omg.gif">
+  <div class="message">
+    <p><strong>OMG!! 😎💛</strong></p>
+    <p>OOH my God!! I cant believee you clicked YES!</p>
+  </div>
+  <button onclick="goPage3()">Click to know 👀</button>
+</div>
+
+<!-- PAGE 3 -->
+<div id="page3" style="display:none;">
+  <img src="kidding.gif">
+  <div class="message">
+    <p><strong>I was only kidding 😜</strong></p>
+    <p>I’ll be your bestie, don’t worry 🤗</p>
+  </div>
+  <button onclick="openPlaylist()">Access Surprise 🎧</button>
+</div>
+
+</div>
+
+<script>
+const music=document.getElementById("bgMusic");
+const muteBtn=document.getElementById("muteBtn");
+const card=document.getElementById("card");
+
+/* Music modal */
+musicYes.onclick=()=>{
+  music.play();
+  muteBtn.style.display="block";
+  musicModal.remove();
+}
+musicNo.onclick=()=>{
+  music.muted=true;
+  muteBtn.style.display="block";
+  musicModal.remove();
+}
+
+muteBtn.onclick=()=>{
+  music.muted=!music.muted;
+  muteBtn.textContent=music.muted?"🔇":"🔊";
+}
+
+/* NO flee */
+function flee(){
+  const r=document.querySelector(".buttons").getBoundingClientRect();
+  noBtn.classList.add("shrink");
+  noBtn.style.left=Math.random()*(r.width-80)+"px";
+  noBtn.style.top=Math.random()*(r.height-40)+"px";
+}
+noBtn.onmouseover=flee;
+noBtn.ontouchstart=flee;
+
+/* Celebration scatter */
+const emojis=["💖","💕","💘","🎉","✨","🎊"];
+function celebrate(){
+  for(let i=0;i<120;i++){
+    const e=document.createElement("div");
+    e.className="celebrate";
+    e.innerText=emojis[Math.floor(Math.random()*emojis.length)];
+    e.style.left=Math.random()*100+"vw";
+    e.style.fontSize=Math.random()*26+18+"px";
+    document.body.appendChild(e);
+    setTimeout(()=>e.remove(),3000);
+  }
+}
+
+/* Toast */
+function toast(){
+  const t=document.createElement("div");
+  t.className="toast";
+  t.innerText='Congratulations! You selected "YES" 💕';
+  document.body.appendChild(t);
+  setTimeout(()=>t.remove(),2000);
+}
+
+/* YES click */
+yesBtn.onclick=()=>{
+  toast();
+  celebrate();
+  card.classList.add("heartbeat");
+
+  setTimeout(()=>{
+    card.classList.remove("heartbeat");
+    page1.style.display="none";
+    page2.style.display="block";
+  },1500);
+}
+
+function goPage3(){
+  page2.style.display="none";
+  page3.style.display="block";
+}
+
+/* Open external playlist */
+function openPlaylist(){
+  window.location.href="playlist.html";
+}
+</script>
+
+</body>
+</html>
